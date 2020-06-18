@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dns
+  annotations:
+    iam.amazonaws.com/role: arn:aws:iam::265506589564:role/eks-vienna-serviceaccount
+spec:
+  template:
+    spec:
+      containers:
+        - name: external-dns
+          args:
+            - --domain-filter=$(DOMAIN)
+            - --google-project=$(PROJECT)
+            - --provider=aws
+            - --txt-owner-id=$(DOMAIN)
+            - --source=service
+            - --source=ingress
+            - --aws-zone-type=public
+          envFrom:
+            - configMapRef:
+                name: kubeplatform-config
