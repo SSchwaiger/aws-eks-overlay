@@ -77,6 +77,8 @@ ip-xxx-xxx-xxx-xxx.eu-west-1.compute.internal   Ready    <none>   20h   v1.16.8-
 ip-xxx-xxx-xxx-xxx.eu-west-1.compute.internal   Ready    <none>   20h   v1.16.8-eks-e16311
 ```
 
+Note: it may happen that the new node group is not displayed in the EKS console.
+
 ### Create a DNS hosted zone
 
 Kubeplatform needs a DNS Zone where it can create additional subdomains. This zone needs to be setup in Route53:
