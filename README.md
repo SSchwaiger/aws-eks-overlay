@@ -151,9 +151,21 @@ aws iam create-policy --policy-name kubeplatform-allow-dns --policy-document '{
 }'
 ```
 
-Then assign this policy to the default profile for the cluster containers. 
+Then assign this policy to the role that automatically was created for the cluster.
 
-(*TODO* This is not production ready it gives all pods access to Route53)
+To find the of the role, display the content of the aws-auth configmap
+
+```
+kubectl get configmap -n kube-system aws-auth -o yaml
+```
+
+and find the value of the rolearn key. The role name is the part of the ARN following the slash (/). Assign the policy created above to this role:
+
+```
+aws iam attach-role-policy --role-name <your-role-name> --policy-arn=<your-policy-arn>
+```
+
+*Caution* This gives all pods admin access to Route53. Do not use this in production environments and be careful about the pods you deploy to any clusters you set up this way.
 
 ```
 TODO Command
