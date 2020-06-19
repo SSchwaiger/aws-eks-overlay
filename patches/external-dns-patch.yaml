@@ -17,5 +17,5 @@ spec:
           envFrom:
             - configMapRef:
                 name: kubeplatform-config
-          volumeMounts:
-      volumes:
+          volumeMounts: []
+      volumes: []
