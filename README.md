@@ -39,7 +39,11 @@ eksctl create cluster \
  --without-nodegroup
 ```
 
-It takes about 10 minutes. This cluster does not contain worker nodes yet. To add those nodes use:
+It takes about 10 minutes.
+
+This command will add the new cluster as default to your local kubeconfig so that you can manage it immediately.
+
+This cluster does not contain worker nodes yet. To add those nodes use:
 
 ```
 eksctl create nodegroup \
