@@ -4,9 +4,6 @@ metadata:
   name: external-dns
 spec:
   template:
-    metadata:
-      annotations:
-        iam.amazonaws.com/role: arn:aws:iam::265506589564:role/eks-vienna-serviceaccount
     spec:  
       containers:
         - name: external-dns
