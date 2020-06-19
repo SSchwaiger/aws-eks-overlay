@@ -167,13 +167,11 @@ aws iam attach-role-policy --role-name <your-role-name> --policy-arn=<your-polic
 
 *Caution* This gives all pods admin access to Route53. Do not use this in production environments and be careful about the pods you deploy to any clusters you set up this way.
 
-```
-TODO Command
-```
+TODO Find better solution to handle DNS updates
 
 ### Install kubeplatform inside cluster
 
-Create a namespace for kubeplattform. We usually use 'kubeplatform'.
+Create a namespace for kubeplattform. We usually use 'kubeplatform', if you want to chose an other you need to update your kustomization.yaml.
 
 ```
 kubectl create namespace ${NAMESPACE}
@@ -182,8 +180,10 @@ kubectl create namespace ${NAMESPACE}
 Then apply the kustomize overlay to the cluster:
 
 ```
-kubeclt apply -k aws-eks-overlay
+kubeclt apply -k <path-to-aws-eks-overlay>
 ```
+
+If you encounter error messages about 'no matches for kind "ClusterIssuer"' that means the operator for the corresponding CRD has not kicked in yet. Simply wait a few moments and run the command again.
 
 ### Finalize
 
