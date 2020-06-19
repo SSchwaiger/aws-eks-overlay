@@ -53,6 +53,8 @@ eksctl create nodegroup \
 --nodes-max 6
 ```
 
+This also takes about 10 minutes.
+
 The instances defined above are using a dimension that should be enough to run the kubeplatform infrastructure as well as some of your applications. 
 
 Test whether the cluster is setup correctly by:
@@ -76,8 +78,41 @@ ip-xxx-xxx-xxx-xxx.eu-west-1.compute.internal   Ready    <none>   20h   v1.16.8-
 Kubeplatform needs a DNS Zone where it can create additional subdomains. This zone needs to be setup in Route53:
 
 ```
-TODO Command
+aws route53 create-hosted-zone --name $(DOMAIN) --caller-reference "$(date)"
 ```
+
+The result will look something like this:
+
+```
+{
+    "HostedZone": {
+        "ResourceRecordSetCount": 2,
+        "CallerReference": "Fr 19 Jun 2020 11:34:17 CEST",
+        "Config": {
+            "PrivateZone": false
+        },
+        "Id": "/hostedzone/XXXXXXXXXXXXXXXXXXX",
+        "Name": "$(DOMAIN)"
+    },
+    "DelegationSet": {
+        "NameServers": [
+            "ns-xxx.awsdns-08.org",
+            "ns-xxx.awsdns-54.com",
+            "ns-xxx.awsdns-10.net",
+            "ns-xxx.awsdns-03.co.uk"
+        ]
+    },
+    "Location": "https://route53.amazonaws.com/2013-04-01/hostedzone/XXXXXXXXXXXXXX",
+    "ChangeInfo": {
+        "Status": "PENDING",
+        "SubmittedAt": "2020-06-19T09:34:18.009Z",
+        "Id": "/change/XXXXXXXXXXXXXXXXXXX"
+    }
+}
+```
+
+Make a note of the nameservers that were assigned to your new DNS zone.
+Enter the new nameservers in your domain configuration of your domain providers DNS.
 
 ### Create a policy for DNS access
 
