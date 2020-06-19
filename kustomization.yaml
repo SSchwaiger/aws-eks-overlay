@@ -26,7 +26,8 @@ secretGenerator:
 
 configMapGenerator:
   - name: kubeplatform-config
-    env: kubeplatform.properties
+    literals:
+      - DOMAIN=vienna.ch.innoq.io
 
 ###########################
 # Kubernetes configuration
