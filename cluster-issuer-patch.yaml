@@ -4,7 +4,7 @@ metadata:
   name: letsencrypt-staging
 spec:
   acme:
-    email: christopher.schmidt@innoq.com
+    email: a.real.one@innoq.com
 
 ---
 
@@ -14,4 +14,4 @@ metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    email: christopher.schmidt@innoq.com
+    email: a.real.one@innoq.com
