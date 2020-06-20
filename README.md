@@ -171,7 +171,23 @@ aws iam attach-role-policy --role-name <your-role-name> --policy-arn=<your-polic
 
 TODO Find better solution to handle DNS updates
 
-### Install kubeplatform inside cluster
+### Overlay Configuration
+
+Use the provided [KubePlatform Kustomize Overlay for AWS EKS](https://github.com/kube-platform/aws-eks-overlay). 
+The configuration is made in these two files:
+
+#### cluster-issuer-patch.yaml
+
+Enter two email addresses for Let’s Encrypt certificate. One for staging and one (or the same) for prod.
+
+#### kustomization.yaml
+
+- Enter the desired domain (e.g. DOMAIN=kubeplatform.my.domain.io) to ConfigMapGenerator
+- change the admin password for keycloak
+- Choose namePrefix, nameSuffix and namespace
+- If you plan to use Let’s Encrypt prod environment instead of staging, change var CLUSTER_ISSUER_NAME accordingly. Note: If you switch from staging to prod, delete already present staging certificates so that the cert-manager issues new certificates.
+
+### Applying YAMLs
 
 Create a namespace for kubeplattform. We usually use 'kubeplatform', if you want to chose an other you need to update your kustomization.yaml.
 
@@ -208,7 +224,7 @@ You should then be able to use this user to go to:
 
 If you want to see the internal metrics collected by Prometheus, you can start by importing a Kubernetes dashboard into Grafana, e.g. https://grafana.com/grafana/dashboards/6417
 
-If you want to remove all KubePlatform resources from the cluster, simplly use the following command:
+If you want to remove all KubePlatform resources from the cluster, simply use the following command:
 
 ```
 kubectl delete -k aws-eks-overlay
