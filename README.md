@@ -120,6 +120,8 @@ The result will look something like this:
 Make a note of the nameservers that were assigned to your new DNS zone.
 Enter the new nameservers in your domain configuration of your domain providers DNS.
 
+Enter the domain name in your kustomization.yaml
+
 ### Create a policy for DNS access
 
 First create the policy itself:
