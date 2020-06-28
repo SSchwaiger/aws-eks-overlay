@@ -81,7 +81,7 @@ Note: it may happen that the new node group is not displayed in the EKS console.
 
 ### Create a DNS hosted zone
 
-Kubeplatform needs a DNS Zone where it can create additional subdomains. This zone needs to be setup in Route53:
+Kubeplatform needs a DNS zone where it can create additional subdomains. This zone needs to be setup in Route53:
 
 ```
 aws route53 create-hosted-zone --name $(DOMAIN) --caller-reference "$(date)"
@@ -153,23 +153,41 @@ aws iam create-policy --policy-name kubeplatform-allow-dns --policy-document '{
 }'
 ```
 
-Then assign this policy to the role that automatically was created for the cluster.
+Refer to https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html to create an IAM role that can be attached to the external-dns service account in the cluster. Attach the policy you've just created to the role.
 
-To find the of the role, display the content of the aws-auth configmap
+Advice: don't forget to connect the OIDC issuer URL of the cluster with AWS STS service.
+
+Here's how the role looks like in the end:
+
+````
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::${AWS::AccountId}:oidc-provider/${OIDC_ENDPOINT}"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "${OIDC_ENDPOINT}:sub": "system:serviceaccount:default:external-dns"
+        }
+      }
+    }
+  ]
+}
+```
+
+TODO: annotate the external-dns service account with the following annotation:
 
 ```
-kubectl get configmap -n kube-system aws-auth -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::AWS_ACCOUNT_ID:role/IAM_ROLE_NAME
 ```
-
-and find the value of the rolearn key. The role name is the part of the ARN following the slash (/). Assign the policy created above to this role:
-
-```
-aws iam attach-role-policy --role-name <your-role-name> --policy-arn=<your-policy-arn>
-```
-
-*Caution* This gives all pods admin access to Route53. Do not use this in production environments and be careful about the pods you deploy to any clusters you set up this way.
-
-TODO Find better solution to handle DNS updates
 
 ### Overlay Configuration
 
